@@ -2019,7 +2019,7 @@ private:
     {
         if (audioUnit != nullptr)
         {
-           #if JUCE_MAC
+           #if JUCE_MAC || JUCE_IOS
             if (producesMidiMessages)
             {
                 AUMIDIOutputCallbackStruct info;
@@ -2539,7 +2539,7 @@ private:
 
     bool canProduceMidiOutput()
     {
-       #if JUCE_MAC
+       #if JUCE_MAC || JUCE_IOS
         UInt32 dataSize = 0;
         Boolean isWritable = false;
 
