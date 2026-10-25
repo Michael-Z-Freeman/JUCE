@@ -700,9 +700,13 @@ struct iOSAudioIODevice::Pimpl final : public AsyncUpdater
                             << ", targetSampleRate: " << targetSampleRate
                             << ", targetBufferSize: " << targetBufferSize);
 
-        setAudioSessionActive (true);
+        // The category has to be set while the session is inactive. Activating first and then
+        // changing category makes iOS reject the change with '!int' (cannot interrupt others),
+        // and the debug assertion at logNSError stops the process.
+        setAudioSessionActive (false);
         setAudioSessionCategory (requestedInputChannels > 0 ? AVAudioSessionCategoryPlayAndRecord
                                                             : AVAudioSessionCategoryPlayback);
+        setAudioSessionActive (true);
         channelData.reconfigure (requestedInputChannels, requestedOutputChannels);
         setTargetSampleRateAndBufferSize();
         updateHardwareInfo (true);
